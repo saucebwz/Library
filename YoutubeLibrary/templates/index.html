@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+    {% if info %}
+        {{ info }}
+    {% endif %}
+
+    <div class="search-form">
+
+            <input type="text" placeholder="Youtube video id" name="link" class="link"/>
+            <input type="button" value="Check!" class="send-link"/>
+
+    </div>
+
+
+
+    <div class="append-information-wrapper">
+    </div>
+
+
+        <div class="all-videos-wrapper">
+            {% if videos %}
+                {% for video in videos %}
+                    <div class="video" id="video{{ forloop.counter }}">
+                        <p class="display-video-title">{{ video.title  }}</p>
+                        <!--<p class="display-video-description">{{ video.description }}</p>-->
+                        <img src="{{ video.thumb_url }}" width="300" alt="image"/>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+    <script type="text/javascript">
+        $( document ).ready(function() {
+        function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+            $(".send-link").click(function(){
+
+                var url = "{% url 'home' %}";
+                var category_url = "{% url 'category_get_view' %}";
+                var link = $('.link').val();
+                if(!link.trim()){
+                    alert("No link provided!");
+                }
+                link = getYoutubeIdFormUrl(link);
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    data: {'link': link, 'isDBAdd': 'false'},
+                    success: function(data){
+                        var wrapper = $('.append-information-wrapper');
+                        var description = data.information.description;
+                        var title = data.information.title;
+                        var thumb_url = data.information.thumbnails.high.url;
+
+                        wrapper.append(
+                                '<p class = "video-title">' + title + '</p>'
+                        );
+                        wrapper.append(
+                                '<p class = "video-description">' + description + '</p>'
+                        );
+                        wrapper.append(
+                                '<img class = "video-thumbnail" width="400" src=' + thumb_url +' />'
+                        );
+                        wrapper.append(
+                                '<input type="button" class="video-send" value="Add!" />'
+                        );
+                        wrapper.append(
+                                '<input type="hidden" class="link" value=' + link + ' />'
+                        );
+
+                        $.ajax({
+                            url: category_url,
+                            type: "POST",
+                            success: function (data) {
+                                wrapper.append(data);
+                            },
+                            dataType: "html"
+                        });
+                        wrapper.fadeIn(1000);
+                    }
+                })
+            });
+
+            $('.append-information-wrapper').on('click', '.video-send', function(){
+                var url = "{% url 'home' %}";
+                var title = $('.video-title').text();
+                var description = $('.video-description').text();
+                var thumb_url = $('.video-thumbnail').attr('src');
+                var selected = [];
+
+                $('.category-checkbox:checked').each(function(){
+                    selected.push($(this).attr("value"));
+                });
+
+                //For now you can add video only in one category
+                if(selected.length > 1){
+                    console.log("ALERT BIATCH");
+                    return;
+                }
+                if(selected.length == 0){
+                    console.log("ALERT BIARCH");
+                    return;
+                }
+
+                var category = selected[0];
+
+
+                var link = $(".link").val();
+               // console.log(title + '\n' + description + '\n' + thumb_url + '\n' + link);
+                  $.ajax({
+                    url: url,
+                    type: "POST",
+                    data: {'title': title, 'description': description, 'thumb_url': thumb_url, 'link': link, 'isDBAdd': 'true', 'category': category},
+                    success: function(data){
+                        alert("test");
+                        var wrapper = $('.all-videos-wrapper');
+                        console.log('wrapper' + wrapper);
+                        var div = wrapper.append('' +
+                        '<div class="video">' +
+                                '<p class="display-video-title">' + title + ' </p>' +
+                                '<img src=' + thumb_url + ' width="300" alt="image"/>' +
+                                '</div>'
+                        );
+                    }
+                })
+            });
+
+             function getYoutubeIdFormUrl(url) {
+                var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                var match = url.match(regExp);
+                if (match && match[2].length == 11) {
+                    return match[2];
+                } else {
+                    //error
+                }
+            }
+        });
+
+
+
+
+    </script>
+
+{% endblock %}

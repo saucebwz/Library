@@ -1,0 +1,9 @@
+{% if categories %}
+
+{% for category in categories %}
+<input type="checkbox" name="category_name" value="{{ category.name }}" id="checkbox{{ forloop.counter }}" class="category-checkbox"/>
+    <label for="checkbox{{ forloop.counter }}">{{ category.name }}</label>
+{% endfor %}
+{% else %}
+    <p>No Categories!</p>
+{% endif %}

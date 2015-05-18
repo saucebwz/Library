@@ -1,0 +1,51 @@
+body{
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.append-information-wrapper{
+    display: none;
+}
+
+.search-form{
+    margin-top: 100px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.all-videos-wrapper{
+    width: 1000px;
+    margin: 0 auto;
+}
+
+.display-video-title, .display-video-description{
+    font-family: Arial, Helvetica, sans-serif;
+    width: 300px;
+    text-align: center;
+}
+.display-video-title{
+    height: 40px;
+    font-size: 14px;
+}
+.display-video-description{
+    font-size: 14px;
+}
+
+
+.video{
+    float: left;
+    margin-left: 20px;
+}
+/*CSS for video-preview block*/
+.append-information-wrapper{
+    width:400px;
+    text-align: center;
+    margin: 0 auto;
+}
+.video-title{
+    font-size: 14px;
+}
+.video-description{
+    font-size: 10px;
+}
