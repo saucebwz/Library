@@ -54,8 +54,8 @@ class HomeView(View):
             if VideoModel.objects.filter(title=title).count() > 0:
                 return HttpResponse("Already in DB!")
             category_model = Category.objects.get(name=category_name)
-            VideoModel.objects.create(title=title, description=description, thumb_url=thumb_url, link=link, category=category_model)
-            return HttpResponse("OK!")
+            video = VideoModel.objects.create(title=title, description=description, thumb_url=thumb_url, link=link, category=category_model)
+            return HttpResponse(video.pk)
 
 class GetCategories(View):
     def post(self, request):

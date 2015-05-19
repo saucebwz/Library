@@ -21,7 +21,7 @@
         <div class="all-videos-wrapper">
             {% if videos %}
                 {% for video in videos %}
-                    <div class="video" id="video{{ forloop.counter }}">
+                    <div class="video" id="{{ video.pk }}">
                         <p class="display-video-title">{{ video.title  }}</p>
                         <!--<p class="display-video-description">{{ video.description }}</p>-->
                         <img src="{{ video.thumb_url }}" width="300" alt="image"/>
@@ -144,7 +144,7 @@
                         var wrapper = $('.all-videos-wrapper');
                         console.log('wrapper' + wrapper);
                         var div = wrapper.append('' +
-                        '<div class="video">' +
+                        '<div class="video" id ='+ data + '>' +
                                 '<p class="display-video-title">' + title + ' </p>' +
                                 '<img src=' + thumb_url + ' width="300" alt="image"/>' +
                                 '</div>'
