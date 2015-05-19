@@ -2,6 +2,7 @@ body{
     margin: 0 0 0 0;
     padding: 0 0 0 0;
     font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
 }
 
 .append-information-wrapper{
@@ -48,4 +49,12 @@ body{
 }
 .video-description{
     font-size: 10px;
+}
+
+.active{
+    border-bottom: 2px black solid;
+}
+
+.sort-category{
+    cursor: pointer;
 }

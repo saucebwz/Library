@@ -17,18 +17,24 @@
     <div class="append-information-wrapper">
     </div>
 
+    <div class="sort-category-wrapper">
+        <span class="sort-category">All</span>
+        {% for category in  categories %}
+            <span class="sort-category">{{ category.name }}</span>
+        {% endfor %}
+    </div>
 
-        <div class="all-videos-wrapper">
-            {% if videos %}
-                {% for video in videos %}
-                    <div class="video" id="{{ video.pk }}">
-                        <p class="display-video-title">{{ video.title  }}</p>
+    <div class="all-videos-wrapper">
+        {% if videos %}
+            {% for video in videos %}
+                <div class="video" id="{{ video.pk }}">
+                    <p class="display-video-title">{{ video.title  }}</p>
                         <!--<p class="display-video-description">{{ video.description }}</p>-->
-                        <img src="{{ video.thumb_url }}" width="300" alt="image"/>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        </div>
+                    <img src="{{ video.thumb_url }}" width="300" alt="image"/>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
 
     <script type="text/javascript">
         $( document ).ready(function() {
@@ -61,6 +67,9 @@
                 }
             }
         });
+            $('.sort-category:first').addClass('active');
+
+
             $(".send-link").click(function(){
 
                 var url = "{% url 'home' %}";
@@ -74,6 +83,7 @@
                     url: url,
                     type: "POST",
                     data: {'link': link, 'isDBAdd': 'false'},
+                    dataType: "json",
                     success: function(data){
                         var wrapper = $('.append-information-wrapper');
                         var description = data.information.description;
@@ -140,9 +150,7 @@
                     type: "POST",
                     data: {'title': title, 'description': description, 'thumb_url': thumb_url, 'link': link, 'isDBAdd': 'true', 'category': category},
                     success: function(data){
-                        alert("test");
                         var wrapper = $('.all-videos-wrapper');
-                        console.log('wrapper' + wrapper);
                         var div = wrapper.append('' +
                         '<div class="video" id ='+ data + '>' +
                                 '<p class="display-video-title">' + title + ' </p>' +
@@ -151,6 +159,23 @@
                         );
                     }
                 })
+            });
+            $('.sort-category-wrapper').on('click', '.sort-category', function(){
+                var category = $(this).text();
+                $('.sort-category-wrapper .sort-category.active').removeClass('active');
+                $(this).addClass('active');
+                $('.all-videos-wrapper').hide().empty();
+                var category_url = "{% url 'category_get_videos' %}";
+                $.ajax({
+                    url: category_url,
+                    type: "POST",
+                    data: {'category': category},
+                    dataType: "html",
+                    success: function(data){
+                        $('.all-videos-wrapper').html(data).fadeIn(1000);
+                    }
+                })
+
             });
 
              function getYoutubeIdFormUrl(url) {

@@ -33,7 +33,8 @@ class HomeView(View):
 
     def get(self, request):
         videos = VideoModel.objects.all()
-        return render_to_response('index.html', {'videos': videos}, context_instance=RequestContext(request))
+        categories = Category.objects.all()
+        return render_to_response('index.html', {'videos': videos, 'categories': categories}, context_instance=RequestContext(request))
 
     def post(self, request):
         req = request.POST.copy()
@@ -62,3 +63,12 @@ class GetCategories(View):
         categories = Category.objects.all()
         return render_to_response('get_categories.html', {'categories': categories},
                                   context_instance=RequestContext(request))
+
+def getVideosFromCategory(request):
+    if request.method == "POST" and request.is_ajax():
+        req = request.POST.copy()
+        category = req['category']
+        if category == 'All':
+            return render_to_response('get_videos.html', {'videos': VideoModel.objects.all()}, context_instance=RequestContext(request))
+        videos = VideoModel.objects.filter(category__name=category)
+        return render_to_response('get_videos.html', {'videos': videos}, context_instance=RequestContext(request))
