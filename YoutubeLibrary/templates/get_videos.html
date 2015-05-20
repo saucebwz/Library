@@ -1,6 +1,6 @@
 {% if videos %}
     {% for video in videos %}
-                    <div class="video" id="{{ video.pk }}">
+                    <div class="video" data-link="{{ video.link }}" id="{{ video.pk }}">
                         <p class="display-video-title">{{ video.title  }}</p>
                             <!--<p class="display-video-description">{{ video.description }}</p>-->
                         <img src="{{ video.thumb_url }}" width="300" alt="image"/>

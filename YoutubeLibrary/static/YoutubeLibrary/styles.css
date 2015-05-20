@@ -1,8 +1,15 @@
 body{
     margin: 0 0 0 0;
     padding: 0 0 0 0;
-    font-family: Arial, Helvetica, sans-serif;
     text-align: center;
+    background: url('http://www.csshero.org/wp-content/themes/heroin/images/pat07.jpg') repeat fixed;
+}
+
+@font-face {
+    font-family: "proxima-semibold";
+    font-style: normal;
+    font-weight: normal;
+    src: url("http://www.csshero.org/wp-content/themes/heroin/fonts/proxima/proximanova-semibold-webfont.eot?#iefix") format("embedded-opentype")
 }
 
 .append-information-wrapper{
@@ -15,9 +22,10 @@ body{
     text-align: center;
 }
 
-.all-videos-wrapper{
+.videos{
     width: 1000px;
     margin: 0 auto;
+    overflow: auto;
 }
 
 .display-video-title, .display-video-description{
@@ -27,17 +35,45 @@ body{
 }
 .display-video-title{
     height: 40px;
-    font-size: 14px;
+    font-size: 13px;
+    color: #8C9398;
+
+
+}.clearfix:after {
+   content: " "; /* Older browser do not support empty content */
+   visibility: hidden;
+   display: block;
+   height: 0;
+   clear: both;
 }
 .display-video-description{
     font-size: 14px;
 }
 
+.clearfix:after {
+   content: " "; /* Older browser do not support empty content */
+   visibility: hidden;
+   display: block;
+   height: 0;
+   clear: both;
+}
 
 .video{
     float: left;
     margin-left: 20px;
+    margin-bottom: 20px;
+    background: #35393C;
 }
+
+.video img{
+    cursor: pointer;
+    vertical-align: bottom;
+}
+
+.all-videos-wrapper{
+    margin-top: 30px;
+}
+
 /*CSS for video-preview block*/
 .append-information-wrapper{
     width:400px;
@@ -46,15 +82,72 @@ body{
 }
 .video-title{
     font-size: 14px;
+
 }
 .video-description{
     font-size: 10px;
 }
 
 .active{
-    border-bottom: 2px black solid;
+    border-bottom: 2px #007DFF solid;
+}
+
+.sort-category-wrapper{
+    background: #35393C;
 }
 
 .sort-category{
     cursor: pointer;
+    font-size: 13px;
+    font-family: 'Nova Mono';
+    line-height: 30px;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
+    color: #8C9398;
+    margin-left: 10px;
+    word-spacing: -2px;
+}
+.sort-category:first-child{
+    margin-left: 0;
+}
+.send-link{
+    background: #40BC69;
+    padding: 12px 35px;
+    font-family: proxima-semibold, Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    font-size: 13px;
+    color: white;
+    border: none;
+    border-bottom: 3px #2D8349 solid;
+    margin-top:10px;
+
+    transition-property:border-bottom, background;
+    transition-duration: 0.2s, 0.2s;
+    transition-timing-function: linear, ease-in;
+}
+
+.send-link:hover{
+    background:#007DFF;
+    border-bottom: 3px #0057B3 solid;
+    transition-property:border-bottom, background;
+    transition-duration: 0.2s, 0.2s;
+    transition-timing-function: linear, ease-in;
+
+}
+
+.link-input input[type="text"] {
+  padding: 10px;
+  border: solid 5px #c9c9c9;
+  transition: border 0.3s;
+}
+.link-input:focus,
+.link-input.focus {
+  border: solid 5px #969696;
+}
+
+
+.link{
+    background-color: transparent;
+    border: 2px solid #6A7989;
+    color: white;
+    padding: 12px 50px;
 }

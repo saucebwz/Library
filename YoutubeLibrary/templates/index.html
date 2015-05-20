@@ -8,6 +8,7 @@
     <div class="search-form">
 
             <input type="text" placeholder="Youtube video id" name="link" class="link"/>
+            <br/>
             <input type="button" value="Check!" class="send-link"/>
 
     </div>
@@ -25,16 +26,19 @@
     </div>
 
     <div class="all-videos-wrapper">
-        {% if videos %}
-            {% for video in videos %}
-                <div class="video" id="{{ video.pk }}">
-                    <p class="display-video-title">{{ video.title  }}</p>
-                        <!--<p class="display-video-description">{{ video.description }}</p>-->
-                    <img src="{{ video.thumb_url }}" width="300" alt="image"/>
-                </div>
-            {% endfor %}
-        {% endif %}
+        <div class="videos">
+            {% if videos %}
+                {% for video in videos %}
+                    <div class="video" data-link="{{ video.link }}" id="{{ video.pk }}">
+                        <p class="display-video-title">{{ video.title  }}</p>
+                            <!--<p class="display-video-description">{{ video.description }}</p>-->
+                        <img src="{{ video.thumb_url }}" width="300" alt="image"/>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
+    <div class="clearfix"></div>
 
     <script type="text/javascript">
         $( document ).ready(function() {
@@ -152,7 +156,7 @@
                     success: function(data){
                         var wrapper = $('.all-videos-wrapper');
                         var div = wrapper.append('' +
-                        '<div class="video" id ='+ data + '>' +
+                        '<div class="video" data-link=' + link +' id ='+ data + '>' +
                                 '<p class="display-video-title">' + title + ' </p>' +
                                 '<img src=' + thumb_url + ' width="300" alt="image"/>' +
                                 '</div>'
@@ -177,6 +181,13 @@
                 })
 
             });
+            $('.all-videos-wrapper').on('click', '.video img', function(){
+
+                window.location.href = $(this).parent().data('link');
+
+            });
+
+
 
              function getYoutubeIdFormUrl(url) {
                 var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
