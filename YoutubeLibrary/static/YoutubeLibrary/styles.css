@@ -3,14 +3,10 @@ body{
     padding: 0 0 0 0;
     text-align: center;
     background: url('http://www.csshero.org/wp-content/themes/heroin/images/pat07.jpg') repeat fixed;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-@font-face {
-    font-family: "proxima-semibold";
-    font-style: normal;
-    font-weight: normal;
-    src: url("http://www.csshero.org/wp-content/themes/heroin/fonts/proxima/proximanova-semibold-webfont.eot?#iefix") format("embedded-opentype")
-}
+
 
 .append-information-wrapper{
     display: none;
@@ -78,14 +74,22 @@ body{
 .append-information-wrapper{
     width:400px;
     text-align: center;
-    margin: 0 auto;
+    margin: 0 auto 20px auto;
+    border: 2px solid #6A7989;
+    padding: 15px;
 }
 .video-title{
     font-size: 14px;
-
+    color: #DF6589;
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 400;
 }
 .video-description{
     font-size: 10px;
+}
+
+.video-thumbnail{
+    margin-bottom: 10px;
 }
 
 .active{
@@ -125,6 +129,7 @@ body{
     transition-timing-function: linear, ease-in;
 }
 
+
 .send-link:hover{
     background:#007DFF;
     border-bottom: 3px #0057B3 solid;
@@ -134,11 +139,32 @@ body{
 
 }
 
-.link-input input[type="text"] {
-  padding: 10px;
-  border: solid 5px #c9c9c9;
-  transition: border 0.3s;
+.add-video{
+    background: #181B1D;
+    padding: 12px 35px;
+    font-family: proxima-semibold, Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    font-size: 13px;
+    color: #8C9398;
+    border: none;
+    border-bottom: 3px #111315 solid;
+    margin-top:10px;
+
+    transition-property:border-bottom, background;
+    transition-duration: 0.2s, 0.2s;
+    transition-timing-function: linear, ease-in;
 }
+
+.add-video:hover{
+    background:#007DFF;
+    border-bottom: 3px #0057B3 solid;
+    transition-property:border-bottom, background;
+    transition-duration: 0.2s, 0.2s;
+    transition-timing-function: linear, ease-in;
+
+}
+
+
 .link-input:focus,
 .link-input.focus {
   border: solid 5px #969696;
@@ -148,6 +174,58 @@ body{
 .link{
     background-color: transparent;
     border: 2px solid #6A7989;
-    color: white;
+    color: #8C9398;
     padding: 12px 50px;
+}
+
+.add-category{
+    cursor: pointer;
+    margin-left: 10px;
+    color: #40BC69;
+    transition-property:color;
+    transition-duration: 0.2s;
+    transition-timing-function: linear, ease-in;
+}
+
+.add-category:hover{
+    color: #007DFF;
+    transition-property:color;
+    transition-duration: 0.2s;
+    transition-timing-function: linear, ease-in;
+}
+
+
+/*POPUP STYLES*/
+
+.popup-window{
+    width:100%;
+    min-height:100%;
+    background-color: rgba(0,0,0,0.5);
+    overflow:hidden;
+    position:fixed;
+    display: none;
+    top:0px;
+}
+.popup-window .popup-window-content{
+    margin:40px auto 0px auto;
+    position: relative;
+    width:300px;
+    padding:10px;
+    background-color: #35393C;
+    border-radius:5px;
+    box-shadow: 0px 0px 10px #000;
+}
+
+.close-popup-window{
+    position: absolute;
+    right: 2px;
+    top: 1px;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    color: #0057B3;
+}
+
+.add-category-textbox{
+    margin-top: 20px;
 }

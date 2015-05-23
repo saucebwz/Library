@@ -7,10 +7,18 @@
 
     <div class="search-form">
 
-            <input type="text" placeholder="Youtube video id" name="link" class="link"/>
+            <input type="text" placeholder="Youtube video id" name="link" class="link" id="link"/>
             <br/>
             <input type="button" value="Check!" class="send-link"/>
 
+    </div>
+
+    <div class="popup-window">
+        <div class="popup-window-content">
+            <span class="close-popup-window">X</span>
+            <input type="text" placeholder="Enter category name" class="add-category-textbox link" id="category-add-text"/>
+            <input type="button" class="add-video" id="add-category" value="Add!"/>
+        </div>
     </div>
 
 
@@ -23,6 +31,7 @@
         {% for category in  categories %}
             <span class="sort-category">{{ category.name }}</span>
         {% endfor %}
+        <span class="add-category">+</span>
     </div>
 
     <div class="all-videos-wrapper">
@@ -33,8 +42,14 @@
                         <p class="display-video-title">{{ video.title  }}</p>
                             <!--<p class="display-video-description">{{ video.description }}</p>-->
                         <img src="{{ video.thumb_url }}" width="300" alt="image"/>
+                        <br/>
+                        <a class="delete-video">Delete video</a>
                     </div>
                 {% endfor %}
+
+                {% else %}
+                    <p>No videos found!</p>
+
             {% endif %}
         </div>
     </div>
@@ -75,10 +90,9 @@
 
 
             $(".send-link").click(function(){
-
                 var url = "{% url 'home' %}";
                 var category_url = "{% url 'category_get_view' %}";
-                var link = $('.link').val();
+                var link = $('#link').val();
                 if(!link.trim()){
                     alert("No link provided!");
                 }
@@ -89,7 +103,7 @@
                     data: {'link': link, 'isDBAdd': 'false'},
                     dataType: "json",
                     success: function(data){
-                        var wrapper = $('.append-information-wrapper');
+                        var wrapper = $('.append-information-wrapper').empty();
                         var description = data.information.description;
                         var title = data.information.title;
                         var thumb_url = data.information.thumbnails.high.url;
@@ -97,17 +111,17 @@
                         wrapper.append(
                                 '<p class = "video-title">' + title + '</p>'
                         );
-                        wrapper.append(
-                                '<p class = "video-description">' + description + '</p>'
-                        );
+{#                        wrapper.append(#}
+{#                                '<p class = "video-description">' + description + '</p>'#}
+{#                        );#}
                         wrapper.append(
                                 '<img class = "video-thumbnail" width="400" src=' + thumb_url +' />'
                         );
                         wrapper.append(
-                                '<input type="button" class="video-send" value="Add!" />'
+                                '<input type="button" class="add-video" id="video-send" value="Add!" />'
                         );
                         wrapper.append(
-                                '<input type="hidden" class="link" value=' + link + ' />'
+                                '<input type="hidden" class="link" value=' + link + ' /><br/>'
                         );
 
                         $.ajax({
@@ -123,7 +137,7 @@
                 })
             });
 
-            $('.append-information-wrapper').on('click', '.video-send', function(){
+            $('.append-information-wrapper').on('click', '#video-send', function(){
                 var url = "{% url 'home' %}";
                 var title = $('.video-title').text();
                 var description = $('.video-description').text();
@@ -136,31 +150,34 @@
 
                 //For now you can add video only in one category
                 if(selected.length > 1){
-                    console.log("ALERT BIATCH");
                     return;
                 }
                 if(selected.length == 0){
-                    console.log("ALERT BIARCH");
                     return;
                 }
 
                 var category = selected[0];
 
 
-                var link = $(".link").val();
+                var link = $("#link").val();
                // console.log(title + '\n' + description + '\n' + thumb_url + '\n' + link);
                   $.ajax({
                     url: url,
                     type: "POST",
                     data: {'title': title, 'description': description, 'thumb_url': thumb_url, 'link': link, 'isDBAdd': 'true', 'category': category},
                     success: function(data){
-                        var wrapper = $('.all-videos-wrapper');
+                        if(data=="false"){
+                            return;
+                        }
+                        var wrapper = $('.videos');
                         var div = wrapper.append('' +
                         '<div class="video" data-link=' + link +' id ='+ data + '>' +
                                 '<p class="display-video-title">' + title + ' </p>' +
                                 '<img src=' + thumb_url + ' width="300" alt="image"/>' +
+                                 '<br/><a class="delete-video">Delete video</a>' +
                                 '</div>'
                         );
+                        $('.append-information-wrapper').fadeOut(1000);
                     }
                 })
             });
@@ -187,7 +204,46 @@
 
             });
 
+            $('.all-videos-wrapper').on('click', '.delete-video', function(){
+                var id = $(this).parent().attr('id');
+                var url = "{% url 'delete_video' %}";
+                var self = $(this).parent();
+                 $.ajax({
+                     url: url,
+                     type: "POST",
+                     data: {'id': id},
+                     success: function (data) {
+                         self.hide(1000);
+                     }
+                 });
+            });
 
+            $('.link').on('click', function(){
+                $(this).val("");
+            });
+
+            $('.add-category').on('click', function(){
+                $('.popup-window').fadeIn(800);
+            });
+
+            $('.close-popup-window').on('click', function(){
+                $('.popup-window').fadeOut(800);
+            });
+
+            $('#add-category').on('click', function(){
+                var category_name = $('#category-add-text').val();
+                var url = "{% url 'add_category_view' %}";
+                  $.ajax({
+                     url: url,
+                     type: "POST",
+                     data: {'category_name': category_name},
+                     success: function (data) {
+                         $('.sort-category:last').after(
+                                 '<span class="sort-category">' + data + '</span>'
+                         );
+                     }
+                 });
+            });
 
              function getYoutubeIdFormUrl(url) {
                 var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;

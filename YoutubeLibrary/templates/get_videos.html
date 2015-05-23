@@ -1,9 +1,15 @@
 {% if videos %}
-    {% for video in videos %}
-                    <div class="video" data-link="{{ video.link }}" id="{{ video.pk }}">
-                        <p class="display-video-title">{{ video.title  }}</p>
-                            <!--<p class="display-video-description">{{ video.description }}</p>-->
-                        <img src="{{ video.thumb_url }}" width="300" alt="image"/>
-                    </div>
-    {% endfor %}
+    <div class="videos">
+        {% for video in videos %}
+                        <div class="video" data-link="{{ video.link }}" id="{{ video.pk }}">
+                            <p class="display-video-title">{{ video.title  }}</p>
+                                <!--<p class="display-video-description">{{ video.description }}</p>-->
+                            <img src="{{ video.thumb_url }}" width="300" alt="image"/>
+                            <br/>
+                            <a class="delete-video">Delete video</a>
+                        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>No videos found!</p>
 {% endif %}

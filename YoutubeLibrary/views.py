@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.views.generic import View
 from django.http import HttpResponse
@@ -13,7 +13,6 @@ YOUTUBE_LINKS = [
 ]
 
 def buildUrl(url, key, **arguments):
-    print("test")
     result = url
     for k, v in arguments.items():
         op = '&'
@@ -53,7 +52,7 @@ class HomeView(View):
             category_name = req['category']
             link = req['link']
             if VideoModel.objects.filter(title=title).count() > 0:
-                return HttpResponse("Already in DB!")
+                return HttpResponse("false")
             category_model = Category.objects.get(name=category_name)
             video = VideoModel.objects.create(title=title, description=description, thumb_url=thumb_url, link=link, category=category_model)
             return HttpResponse(video.pk)
@@ -72,3 +71,18 @@ def getVideosFromCategory(request):
             return render_to_response('get_videos.html', {'videos': VideoModel.objects.all()}, context_instance=RequestContext(request))
         videos = VideoModel.objects.filter(category__name=category)
         return render_to_response('get_videos.html', {'videos': videos}, context_instance=RequestContext(request))
+
+def deleteVideo(request):
+    if request.method == "POST" and request.is_ajax():
+        req = request.POST.copy()
+        id = req['id']
+        get_object_or_404(VideoModel, pk=id).delete()
+        return HttpResponse("OK!")
+
+def addCategory(request):
+    req = request.POST.copy()
+    category_name = req['category_name']
+    if Category.objects.filter(name=category_name):
+        return HttpResponse("Already in DB!")
+    _c = Category.objects.create(name=category_name)
+    return HttpResponse(_c.name)
