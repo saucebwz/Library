@@ -4,6 +4,8 @@ from django.template import RequestContext
 from django.views.generic import View
 from django.http import HttpResponse
 from YoutubeLibrary.models import Category, VideoModel
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
 import requests
 import json
 
@@ -28,8 +30,9 @@ API_KEY = "AIzaSyDIRBEKUBShPlDHeoROErwZBaicb3wwNH8"
 
 # Create your views here.
 
-class HomeView(View):
 
+class HomeView(View):
+    method_decorator(ensure_csrf_cookie)
     def get(self, request):
         videos = VideoModel.objects.all()
         categories = Category.objects.all()
@@ -72,6 +75,7 @@ def getVideosFromCategory(request):
         videos = VideoModel.objects.filter(category__name=category)
         return render_to_response('get_videos.html', {'videos': videos}, context_instance=RequestContext(request))
 
+
 def deleteVideo(request):
     if request.method == "POST" and request.is_ajax():
         req = request.POST.copy()
@@ -79,8 +83,12 @@ def deleteVideo(request):
         get_object_or_404(VideoModel, pk=id).delete()
         return HttpResponse("OK!")
 
+
+
 def addCategory(request):
+    print("WTF")
     req = request.POST.copy()
+    print("We are here!")
     category_name = req['category_name']
     if Category.objects.filter(name=category_name):
         return HttpResponse("Already in DB!")

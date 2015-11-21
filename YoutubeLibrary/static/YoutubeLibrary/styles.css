@@ -176,6 +176,8 @@ body{
     border: 2px solid #6A7989;
     color: #8C9398;
     padding: 12px 50px;
+    width: 200px;
+    text-align: center;
 }
 
 .add-category{

@@ -22,7 +22,6 @@
     </div>
 
 
-
     <div class="append-information-wrapper">
     </div>
 
@@ -32,6 +31,10 @@
             <span class="sort-category">{{ category.name }}</span>
         {% endfor %}
         <span class="add-category">+</span>
+    </div>
+
+    <div class="modal fade">
+
     </div>
 
     <div class="all-videos-wrapper">
@@ -73,7 +76,6 @@
         return cookieValue;
     }
         var csrftoken = getCookie('csrftoken');
-
         function csrfSafeMethod(method) {
             // these HTTP methods do not require CSRF protection
             return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -199,9 +201,23 @@
 
             });
             $('.all-videos-wrapper').on('click', '.video img', function(){
-
-                window.location.href = $(this).parent().data('link');
-
+                var that = $(this);
+                var $parent = that.parent();
+                var iframe = $('<iframe></iframe>', {
+                    width: 600,
+                    height: 500,
+                    src: "http://www.youtube.com/embed/"+getYoutubeIdFormUrl($parent.data('link')) + "?autoplay=1",
+                    frameborder: "no"
+                });
+                console.log(iframe);
+                $modal = $('.modal');
+                $modal.empty();
+                var div = $("<div></div>", {
+                   'class': 'modal-content'
+                });
+                div.append(iframe);
+                $modal.append(div);
+                $modal.modal();
             });
 
             $('.all-videos-wrapper').on('click', '.delete-video', function(){
